@@ -24,7 +24,7 @@ public class BuildingAPI {
     @GetMapping(value="/api/building/" )
     public List<BuildingDTO> getBuilding1(@RequestParam(value="name" , required=false) String name ,
     		                              @RequestParam (value="districtid" , required = false) Integer districtid, 
-    		                              @RequestParam(value="typeCode", required = false)List<String> typeCode) {
+    		                              @RequestParam(value="typecode", required = false)List<String> typeCode) {
     	
     	List<BuildingDTO> result = buildingService.findAll(name , districtid) ;
     	return result; 
