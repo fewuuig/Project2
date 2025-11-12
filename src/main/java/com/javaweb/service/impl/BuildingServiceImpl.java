@@ -2,10 +2,12 @@ package com.javaweb.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.javaweb.converter.BuildingDTOConverter;
 import com.javaweb.model.BuildingDTO;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.Entity.BuildingEntity;
@@ -15,16 +17,15 @@ import com.javaweb.service.BuildingService;
 public class BuildingServiceImpl implements BuildingService {
 	@Autowired
 	private BuildingRepository buildingRepository ; 
+	@Autowired
+	private BuildingDTOConverter BuildingDTOConverter ; 
 	@Override
-	public List<BuildingDTO> findAll(String name ,Integer districtid) {
-		List<BuildingEntity> buildingEntities = buildingRepository.findAll(name ,districtid) ; 
+	public List<BuildingDTO> findAll(Map<String,Object> params , List<String> typeCode) {
+		List<BuildingEntity> buildingEntities = buildingRepository.findAll(params , typeCode) ; 
 		List<BuildingDTO> results = new ArrayList<>() ; 
+		
 		for(BuildingEntity build : buildingEntities) {
-			BuildingDTO buildingDTO = new BuildingDTO() ; 
-			buildingDTO.setName(build.getName());
-			buildingDTO.setNumberOfBasement(build.getNumberofbasement());
-			buildingDTO.setAddress(build.getStreet()+" , "+build.getWard());
-			results.add(buildingDTO) ; 
+			results.add(BuildingDTOConverter.toBuildingDTO(build)) ; 
 		}
 		return results;
 		
