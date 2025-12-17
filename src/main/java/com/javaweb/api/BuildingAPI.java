@@ -66,6 +66,13 @@ public class BuildingAPI {
     	entityManager.merge(buildingEntity);
     	System.out.println("ok");
     }
+/*
+ * chú ý có thể gộp buơcs updateBuilding với createBuilding thành 1 bước 
+ * vì nguyên nhân sau : khi thêm toad nhad thì monhf không cần chuyền id tòa nhà vào (nó tựi tăng ở db)
+ *                      mình chỉ cần thêm cái id của tòa nhà vào là chuyển thành bước xóa ro òi sử lý if else 
+ * */   
+    
+    
     
 //    void valiDate(BuildingDTO buildingDTO){
 //    	String obj = "";
