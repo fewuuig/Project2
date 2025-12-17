@@ -1,18 +1,81 @@
 package com.javaweb.repository.Entity;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "building")
 public class BuildingEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id ; 
+	
+	@Column(name="name")
 	private String name ;
+	
+	@Column(name = "street")
 	private String street ;
-	private String ward ;  
-	private Integer districtid ; 
-	private Long numberofbasement ; 
-	private Long floorarea ; 
+	
+	@Column(name="ward")
+	private String ward ;
+	
+//	@Column(name="districtid")  
+//	private Integer districtid ; 
+	
+	@Column(name="rentprice")
 	private Long rentprice ; 
-	private String rentpricedescription ; 
+	
+	@Column(name = "managername")
 	private String managername ; 
+	
+	@Column(name="managerphonenumber")
 	private String  managerphonenumber ;
+
+	@Column(name = "numberofbasement")
+	private Long numberofbasement ; 
+	
+	@Column(name = "floorarea")
+	private Long floorarea ; 
+	
+	@Column(name = "rentpricedescription")
+	private String rentpricedescription  ; 
+	
+	@Column(name = "servicefee")
 	private Long servicefee ; 
+
+	@ManyToOne
+	@JoinColumn(name="districtid" )
+	private DistrictEntity district ; 
+	
+	@OneToMany(mappedBy = "building" , fetch = FetchType.LAZY)
+	private List<RentAreaEntity> rentAreas= new ArrayList<>() ; 
+	
+	
+	
+	public DistrictEntity getDistrict() {
+		return district;
+	}
+	public void setDistrict(DistrictEntity district) {
+		this.district = district;
+	}
+	public List<RentAreaEntity> getRentArea() {
+		return rentAreas;
+	}
+	public void setRentArea(List<RentAreaEntity> rentAreas) {
+		this.rentAreas = rentAreas;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -37,12 +100,12 @@ public class BuildingEntity {
 	public void setWard(String ward) {
 		this.ward = ward;
 	}
-	public Integer getDistrictid() {
-		return districtid;
-	}
-	public void setDistrictid(Integer districtid) {
-		this.districtid = districtid;
-	}
+//	public Integer getDistrictid() {
+//		return districtid;
+//	}
+//	public void setDistrictid(Integer districtid) {
+//		this.districtid = districtid;
+//	}
 	public Long getNumberofbasement() {
 		return numberofbasement;
 	}
