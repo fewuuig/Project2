@@ -8,6 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.builder.BuildingSearchBuilder;
@@ -101,6 +105,8 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository{
 			where.append(" AND renttype.code IN('" + java.lang.String.join("','",typeCode) +"')") ; 
 		}
 	}
+	@PersistenceContext
+	private EntityManager entityManager ; 
 	@Override
 	public  List<BuildingEntity>  findAll(BuildingSearchBuilder buildingSearchBuilder){
 		StringBuilder sql = new StringBuilder("SELECT b.id , b.name , servicefee ,b.numberofbasement ,b.rentpricedescription, b.districtid, b.ward , b.street , b.floorarea , b.rentprice"
@@ -110,29 +116,9 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository{
 		queryNormal(buildingSearchBuilder, where);
 		querySpecial(buildingSearchBuilder, where);
 		sql =sql.append(where).append(" GROUP BY b.id ; ") ; 
-		List<BuildingEntity> results = new ArrayList<>() ; 
-		try(Connection conn = connectionJDBCUtil.getConnecTion();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql.toString()) ){ 
-			while(rs.next()) {
-				BuildingEntity buildingEntity = new BuildingEntity() ; 
-				buildingEntity.setId(rs.getInt("b.id"));
-				buildingEntity.setName(rs.getString("b.name"));
-				buildingEntity.setStreet(rs.getString("b.street")) ;
-				buildingEntity.setWard(rs.getString("b.ward"));
-				buildingEntity.setNumberofbasement(rs.getLong("b.numberofbasement"));
-				buildingEntity.setFloorarea(rs.getLong("b.floorarea"));
-				buildingEntity.setRentprice(rs.getLong("b.rentprice"));
-				buildingEntity.setRentpricedescription(rs.getString("b.rentpricedescription"));
-				buildingEntity.setManagername(rs.getString("b.managername"));
-				buildingEntity.setManagerphonenumber(rs.getString("b.managerphonenumber"));
-				buildingEntity.setServicefee(rs.getLong("b.servicefee"));
-				results.add(buildingEntity) ; 
-			}
-		}catch(SQLException ex) {
-			ex.printStackTrace();
-		}
-		return results ; 
+		
+		Query query = entityManager.createNativeQuery(sql.toString() , BuildingEntity.class) ; 
+		return query.getResultList() ; 
 	}
 
 }
